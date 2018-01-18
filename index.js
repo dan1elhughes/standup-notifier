@@ -39,14 +39,13 @@ const instance = jira.create({ auth, baseURL });
 const getRelevantItems = () => instance.get(`/search?jql=${encodeURIComponent(query)}`).then(({ data }) => data.issues);
 
 const extractFields = issue => {
-	const { fields, key } = issue;
+	const summary = issue.fields.summary;
+	const assignee = issue.fields.assignee.displayName;
+	const key = issue.key;
+	const status = issue.fields.status.name;
+	const updated = issue.fields.updated;
 
-	const { summary, assignee, status, updated } = fields;
-
-	const { displayName } = assignee;
-	const { name } = status;
-
-	return { summary, assignee: displayName, status: name, key, updated };
+	return { summary, assignee, status, key, updated };
 };
 
 const convertDates = issue => Object.assign(issue, { updated: new Date(issue.updated) });
@@ -74,9 +73,9 @@ const format = issues => {
 	return issues.map(({summary, assignee, status, key }) =>
 		`${status}: ${summary} (${key}, ${assignee})`
 	).join('\n\n');
-}
+};
 
-const app = pipe([
+module.exports = pipe([
 	getRelevantItems,
 	map(extractFields),
 	map(convertDates),
@@ -84,10 +83,3 @@ const app = pipe([
 	format,
 	output,
 ]);
-
-app()
-	.then(console.log.bind(console))
-	.catch(err => {
-		console.log(err);
-		process.exit(1);
-	});
