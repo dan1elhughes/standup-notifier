@@ -1,0 +1,36 @@
+{
+	"name": "Standup Notifier",
+	"description": "Daily notifications for recently updated Jira tickets",
+	"repository": "https://github.com/dan1elhughes/standup-notifier",
+	"logo": "https://raw.githubusercontent.com/dan1elhughes/standup-notifier/master/static/icon.png",
+	"env": {
+		"JIRA_USERNAME": {
+			"description": "Jira username"
+		},
+		"JIRA_PASSWORD": {
+			"description": "Jira password"
+		},
+		"JIRA_BASE_URL": {
+			"description": "The base URL to which api requests are made, ending in /rest/api/2"
+		},
+		"PUSHBULLET_API_KEY": {
+			"description": "Pushbullet API key for notifications",
+			"required": false
+		},
+		"TELEGRAM_CONFIG": {
+			"description": "Telegram token and chat ID, in the format \"chatID|token\"",
+			"required": false
+		},
+		"JIRA_FILTER": {
+			"description": "Jira (JQL) query string",
+			"value": "status changed by currentUser() ORDER BY updated DESC"
+		},
+		"TZ": {
+			"description": "Timezone in TZ database format",
+			"value": "Europe/London"
+		}
+	},
+	"addons": [
+		"scheduler"
+	]
+}
